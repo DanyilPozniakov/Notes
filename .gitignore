@@ -1,5 +1,4 @@
 build
 cmake-build-debug
 .idea
-.gitignore
 CMakeLists.txt.user
