@@ -1,4 +1,8 @@
-build
+
 cmake-build-debug
-.idea
+build
+qt_dll
 CMakeLists.txt.user
+.gitignore
+
+
