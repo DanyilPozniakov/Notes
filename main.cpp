@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include "Tools/texthandler.h"
+#include "src/texthandler.h"
 
 int main(int argc, char *argv[])
 {
