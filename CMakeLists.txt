@@ -5,7 +5,7 @@ project(Notes VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH "D:/Qt/6.7.3/msvc2022_64")
-find_package(Qt6 6.2 COMPONENTS Quick Qml REQUIRED)
+find_package(Qt6 6.2 COMPONENTS Core Quick Qml QuickControls2 REQUIRED)
 
 qt_add_executable(appNotes
     main.cpp
@@ -42,7 +42,9 @@ set_target_properties(appNotes PROPERTIES
 
 target_link_libraries(appNotes
     PRIVATE Qt6::Quick
-            Qt6::Qml)
+            Qt6::Qml
+            Qt6::Core
+            Qt6::QuickControls2)
 
 include(GNUInstallDirs)
 install(TARGETS appNotes

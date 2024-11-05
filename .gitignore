@@ -4,4 +4,5 @@ cmake-build-debug
 build
 qt_dll
 CMakeLists.txt.user
+keywords.json
 
