@@ -5,49 +5,62 @@
 #include <QChar>
 #include <QVariantList>
 #include <QTextDocument>
+#include <QTextCursor>
+#include <QTextOption>
 
 class TextHandler : public QObject
 {
     Q_OBJECT
 
 public:
+    QVariantList getCurrentSuggestions() const;
+    Q_PROPERTY(QVariantList currentSuggestions READ getCurrentSuggestions NOTIFY currentSuggestionsChanged);
+    Q_PROPERTY(int m_cursor READ cursorPosition WRITE setCursorPosition NOTIFY cursorUpdated);
     TextHandler(QObject *parent = nullptr);
 
-    Q_PROPERTY(QVariantList currentSuggestions READ getCurrentSuggestions NOTIFY currentSuggestionsChanged);
-    QVariantList getCurrentSuggestions() const;
-
-    Q_INVOKABLE bool handleKeyPress(const int& key, const QString& eventText,const QString &text, int cursorPosition);
-    void completeBracket(const QString& firstChar,const QString& endChar, int cursorPosition);
-    void deleteBracketPair(QChar& ch,QChar& endChar, const QString& text,  int cursorPos);
-    void autoFormatBracketPair(int cursorPos);
-
-
-    Q_INVOKABLE bool autocompleteSuggestions(QString currentWord);
-    QString autoIndent(QString text);
-
+    int cursorPosition() const;
+    void setCursorPosition(int position);
 
 
 signals:
-    void insertText(int cursorPosition, const QString &text);
-    void deleteText(int start, int end);
-    void updateCursorPosition(int cursorPosition);
     void currentSuggestionsChanged();
+    void cursorUpdated(int position);
 
+
+public slots:
+    void onTextChanged(int position, int charsRemoved, int charsAdded);
+    void onCursorPositionChanged(const QTextCursor& cursor);
+    bool onHandleKeyPress(int key, Qt::KeyboardModifier modifier);
 
 private:
+    QString                         m_previousText;
+    QTextCursor                     m_cursor;
     QTextDocument*                  m_textDocument;
-    QString                         m_text;
-
+    QTextOption                     m_textOptions;
     std::unique_ptr<QSet<QString>>  m_autoCompleteSet;
     QVariantList                    m_currentSuggestions;
 
-    std::optional<QChar>            isAutoChar(const QChar &text);
+    bool m_isAutoCompleting = false;
+
+
     std::unique_ptr<QSet<QString>>  createAutoCompleteSet();
 
-    QString getCurrentLine(const QString& text, int cursorPosition);
+    QString getCurrentLineText();
+    std::size_t getCurrentScope();
+    QString generateIndentation();
 
-    bool shouldLineBreak (const QString& line);
-    bool isBracketPair(const QString& text, int cursorPos);
+
+    bool shuldBreakLine(const QString& line);
+    bool isLineBeforeBackspaceEmpty();
+    bool isLineEmpty(const QString& line);
+    std::optional<QChar> isBracket(const QChar& bracket);
+
+    void autoCompleteBrackets(const QChar& bracket);
+    void autoDeleteBrackets(const QChar& bracket);
+    void deleteAllBeforeFirstChar();
+
+
+
 
 public:
     void setTextDocument(QObject* textEditObject);

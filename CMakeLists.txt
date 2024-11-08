@@ -46,6 +46,10 @@ target_link_libraries(appNotes
             Qt6::Core
             Qt6::QuickControls2)
 
+if (WIN32)
+    set_target_properties(appNotes PROPERTIES WIN32_EXECUTABLE OFF)
+endif()
+
 include(GNUInstallDirs)
 install(TARGETS appNotes
     BUNDLE DESTINATION .
