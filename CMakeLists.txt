@@ -5,7 +5,7 @@ project(Notes VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH "D:/Qt/6.7.3/msvc2022_64")
-find_package(Qt6 6.2 COMPONENTS Core Quick Qml QuickControls2 REQUIRED)
+find_package(Qt6 6.2 COMPONENTS Core Quick Qml QuickControls2 Gui REQUIRED)
 
 qt_add_executable(appNotes
     main.cpp
@@ -21,11 +21,12 @@ qt_add_qml_module(appNotes
     URI Notes
     VERSION 1.0
     QML_FILES main.qml
-    SOURCES src/texthandler.h src/texthandler.cpp
-    SOURCES src/texthandler.cpp src/texthandler.h
-    SOURCES src/texthandler.cpp src/texthandler.h
-    SOURCES src/parsers/JsonParser.hpp src/parsers/JsonParser.cpp SOURCES
+    SOURCES src/TextEditor/texthandler.h src/TextEditor/texthandler.cpp
+    SOURCES src/Parsers/JsonParser.hpp src/Parsers/JsonParser.cpp
+    SOURCES src/TextEditor/SyntaxHighlighter.h src/TextEditor/SyntaxHighlighter.cpp
+    SOURCES src/FileSystem/FileHandler.h src/FileSystem/FileHandler.cpp
     QML_FILES NoteEditor.qml
+    QML_FILES TopMenuBar.qml
 
 )
 
@@ -44,6 +45,7 @@ target_link_libraries(appNotes
     PRIVATE Qt6::Quick
             Qt6::Qml
             Qt6::Core
+            Qt6::Gui
             Qt6::QuickControls2)
 
 if (WIN32)

@@ -5,8 +5,8 @@
 #include <QQuickTextDocument>
 #include <QTextCursor>
 #include <QTextBlock>
-#include "../src/parsers/JsonParser.hpp"
-#include "Regex.hpp"
+#include "src/parsers/JsonParser.hpp"
+#include "src/TextEditor/Regex.hpp"
 
 #include <QQuickTextDocument>
 #include <iostream>
@@ -19,8 +19,7 @@ static const QMap<QChar,QChar> autoCharMap = {
     {'(',')'},
     {'{','}'},
     {'[',']'},
-    {'"','"'},
-    {'\'','\''}
+    {'<','>'}
 };
 
 
@@ -35,12 +34,7 @@ TextHandler::TextHandler(QObject *parent) : QObject(parent)
 
 std::unique_ptr<QSet<QString>> TextHandler::createAutoCompleteSet()
 {
-    auto set = JsonParser::parseAutocompleteJsonArray(":/keywords.json");
-    if(set)
-    {
-        return std::make_unique<QSet<QString>>(std::move(*set));
-    }
-    assert(set && "AutoCompleteSet is null");
+
     return {};
 }
 
@@ -70,6 +64,9 @@ void TextHandler::setTextDocument(QObject *textEditObject)
         //CURSOR
         m_cursor = QTextCursor(m_textDocument);
         m_cursor.setPosition(0);
+
+        //SYNTAX HIGHLIGHTER
+        m_syntaxHighlighter = new SyntaxHighlighter(m_textDocument);
     }
 }
 
@@ -108,10 +105,6 @@ QString TextHandler::getCurrentLineText()
     return block.text();
 }
 
-void TextHandler::onCursorPositionChanged(const QTextCursor &cursor)
-{
-    qDebug() << "Cursor position: " << m_cursor.position();
-}
 
 
 std::optional<QChar> TextHandler::isBracket(const QChar &bracket)
@@ -163,10 +156,12 @@ void TextHandler::autoDeleteBrackets(const QChar &bracket)
 
 int TextHandler::cursorPosition() const
 {
+    qDebug() << "Getting cursor position: " << m_cursor.position();
     return m_cursor.position();
 }
 void TextHandler::setCursorPosition(int position)
 {
+    qDebug() << "Setting cursor position: " << position;
     m_cursor.setPosition(position);
 }
 
@@ -185,10 +180,13 @@ bool TextHandler::onHandleKeyPress(int key, Qt::KeyboardModifier modifier)
                 if(shuldBreakLine(line))
                 {
                     //TODO: добавить отстуцпы если есть внешкий скоупrtyj
+                    QString indentation = generateIndentation();
+                    QString indentationMin = generateIndentation().removeLast();
                     m_cursor.movePosition(QTextCursor::Left,QTextCursor::MoveAnchor,1);
-                    m_cursor.insertText("\n");
-                    m_cursor.insertText(QString(generateIndentation()+ "\n\t\n"));
-                    m_cursor.movePosition(QTextCursor::Left,QTextCursor::MoveAnchor,1);
+                    m_cursor.insertText("\n" + indentationMin);
+                    QString text =  "\n" + indentation + "\n" + indentationMin;
+                    m_cursor.insertText(text);
+                    m_cursor.movePosition(QTextCursor::Left,QTextCursor::MoveAnchor,getCurrentScope());
                     emit cursorUpdated(m_cursor.position());
                     return true;
                 }

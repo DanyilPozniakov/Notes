@@ -10,7 +10,7 @@ class JsonParser : public IFileParser
 {
 public:
     virtual void parseFile(const QString& path) override;
-    static QSet<QString>* parseAutocompleteJsonArray(const QString& path);
+    static QStringList parseJsonArray(const QString& path);
 };
 
 #endif //JSONPARSER_HPP

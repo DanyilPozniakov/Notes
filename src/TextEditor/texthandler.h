@@ -8,6 +8,9 @@
 #include <QTextCursor>
 #include <QTextOption>
 
+#include "SyntaxHighlighter.h"
+
+
 class TextHandler : public QObject
 {
     Q_OBJECT
@@ -29,7 +32,6 @@ signals:
 
 public slots:
     void onTextChanged(int position, int charsRemoved, int charsAdded);
-    void onCursorPositionChanged(const QTextCursor& cursor);
     bool onHandleKeyPress(int key, Qt::KeyboardModifier modifier);
 
 private:
@@ -39,6 +41,8 @@ private:
     QTextOption                     m_textOptions;
     std::unique_ptr<QSet<QString>>  m_autoCompleteSet;
     QVariantList                    m_currentSuggestions;
+
+    SyntaxHighlighter*              m_syntaxHighlighter;
 
     bool m_isAutoCompleting = false;
 

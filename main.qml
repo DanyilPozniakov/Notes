@@ -22,34 +22,25 @@ ApplicationWindow {
     color: "#1e1f22"
     //flags: Qt.FramelessWindowHint
 
-    header: MenuBar {
+    header: TopMenuBar {
         id: menuBar
         height: 25
-        Menu {
-            title: "File"
-            Action { text: "New" }
-            Action { text: "Open" }
-            Action { text: "Save" }
-            MenuSeparator {}
-            Action {
-                text: "Setting"
-                onTriggered: settingDialog.open();
-            }
-            Action { text: "Quit" }
-        }
-        Menu {
-            title: "Edit"
-            Action { text: "Undo" }
-            Action { text: "Redo" }
-            MenuSeparator {}
-            Action { text: "Cut" }
-            Action { text: "Copy" }
-            Action { text: "Past" }
+    }
+    NoteEditor {
+        id: noteEditor
+        anchors.right: parent.right
+        anchors.left: leftBar.right
+        width: 400
+        height: parent.height
+    }
 
-        }
-        Menu {
-            title: "About"
-        }
+    Rectangle{
+        id: leftBar
+        color: "#3c3f40"
+        anchors.left: parent.left
+        width: 250
+        height: parent.height
+
 
     }
 
@@ -64,12 +55,4 @@ ApplicationWindow {
         width: 400
         height: 250
     }
-
-
-
-    NoteEditor {
-        id: noteEditor
-        anchors.fill: parent
-    }
-
 }

@@ -63,17 +63,7 @@ Item {
                 function onCursorUpdated(cursorPos) {
                     textEdit.cursorPosition = cursorPos;
                 }
-                
-                // function onInsertText(cursorPos, text) {
-                //     var cursor = cursorPos === 0 ? textEdit.cursorPosition : cursorPos;
-                //     textEdit.insert(cursor,text);
-                // }
-                // function onUpdateCursorPosition(cursorPos) {
-                //     textEdit.cursorPosition = cursorPos;
-                // }
-                // function onDeleteText(start,end) {
-                //     textEdit.remove(start,end);
-                // }
+
             }
         }
 

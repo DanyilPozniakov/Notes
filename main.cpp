@@ -5,7 +5,7 @@
 #include <QQuickTextDocument>
 #include <QDebug>
 #include <iostream>
-#include "src/texthandler.h"
+#include "src/TextEditor/texthandler.h"
 
 
 int main(int argc, char *argv[])
