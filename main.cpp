@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/Notes/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/Notes/qml/main.qml"));
     TextHandler textHandler;
     engine.rootContext()->setContextProperty("textHandler",&textHandler);
     engine.load(url);
@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
     }
 
     return app.exec();
-
 }
 
 

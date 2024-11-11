@@ -3,7 +3,7 @@
 #include "../Parsers/JsonParser.hpp"
 #include "SyntaxHighlighter.h"
 
-SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
+TextEditor::SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
     : QSyntaxHighlighter(parent)
 {
     QColor color = "#cc7a46";
@@ -22,7 +22,7 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
     qDebug() << "SyntaxHighlighter created";
 }
 
-void SyntaxHighlighter::highlightBlock(const QString &text)
+void TextEditor::SyntaxHighlighter::highlightBlock(const QString &text)
 {
     for(const auto& rule : rules)
     {
@@ -34,6 +34,4 @@ void SyntaxHighlighter::highlightBlock(const QString &text)
         }
     }
     qDebug() << "highlightBlock";
-
-
 }

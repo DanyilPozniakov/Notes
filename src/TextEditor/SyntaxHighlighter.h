@@ -5,25 +5,25 @@
 #include <QRegularExpression>
 #include <QString>
 
-class SyntaxHighlighter : public QSyntaxHighlighter
-{
-    Q_OBJECT
+namespace {
+struct HighlightingRule {
+  QRegularExpression pattern;
+  QTextCharFormat format;
+};
+}
+
+namespace TextEditor {
+
+class SyntaxHighlighter : public QSyntaxHighlighter {
+  Q_OBJECT
 public:
-    explicit SyntaxHighlighter(QTextDocument* parent = nullptr);
-
-    void highlightBlock(const QString& text) override;
-
+  explicit SyntaxHighlighter(QTextDocument *parent = nullptr);
+  void highlightBlock(const QString &text) override;
 
 private:
-    //QString patterns;
-    QTextCharFormat keywordFormat;
-    struct HighlightingRule
-    {
-        QRegularExpression  pattern = QRegularExpression("\\bclass\\b");
-        QTextCharFormat     format;
-    };
-    QVector<HighlightingRule> rules;
-
+  QTextCharFormat keywordFormat;
+  QVector<HighlightingRule> rules;
 };
 
+} // namespace TextEditor
 #endif //SYNTAXHIGHLIGHTER_H

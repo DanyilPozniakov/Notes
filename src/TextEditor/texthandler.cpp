@@ -18,8 +18,7 @@
 static const QMap<QChar,QChar> autoCharMap = {
     {'(',')'},
     {'{','}'},
-    {'[',']'},
-    {'<','>'}
+    {'[',']'}
 };
 
 
@@ -29,12 +28,10 @@ static const QMap<QChar,QChar> autoCharMap = {
 TextHandler::TextHandler(QObject *parent) : QObject(parent)
 {
     m_autoCompleteSet = createAutoCompleteSet();
-
 }
 
 std::unique_ptr<QSet<QString>> TextHandler::createAutoCompleteSet()
 {
-
     return {};
 }
 
@@ -87,7 +84,7 @@ void TextHandler::onTextChanged(int position, int charsRemoved, int charsAdded)
         autoCompleteBrackets(text[0]);
     }
 
-    //autodetect brackets
+    //auto delete brackets
     if(charsRemoved == 1 && !deletedText.isEmpty() && isBracket(deletedText[0]))
     {
         autoDeleteBrackets(deletedText[0]);

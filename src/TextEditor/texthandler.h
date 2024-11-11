@@ -10,6 +10,8 @@
 
 #include "SyntaxHighlighter.h"
 
+using namespace TextEditor;
+
 
 class TextHandler : public QObject
 {

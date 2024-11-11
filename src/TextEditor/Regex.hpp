@@ -5,8 +5,8 @@
 
 namespace Regex
 {
-    const QString CLASS_DECLARATION = R"(^\s*(class)\s+(\w+)(\s*)({))";
-    const QString FUNCTION_DECLARATION = R"(^\s*\w+\s+w+\s*(\(\s*\w*\s*\w*\))\s*({))";
+    const static QString CLASS_DECLARATION = R"(^\s*(class)\s+(\w+)(\s*)({))";
+    const static QString FUNCTION_DECLARATION = R"(^\s*\w+\s+\w+\s*\((\w*(<\w*(::\w+)*>))*(\s*[\&\*]?\w+\,?\s?)*\)\s*\{)";
 }
-void add(int a) {}
+
 #endif //REGEX_HPP

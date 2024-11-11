@@ -5,13 +5,16 @@ project(Notes VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH "D:/Qt/6.7.3/msvc2022_64")
-find_package(Qt6 6.2 COMPONENTS Core Quick Qml QuickControls2 Gui REQUIRED)
+find_package(Qt6 6.2 COMPONENTS Core Quick qml QuickControls2 Gui REQUIRED)
+
+
 
 qt_add_executable(appNotes
     main.cpp
 )
 
 qt_add_resources(appNotes jsonResurces.qrc )
+
 
 qt_add_resources(appNotes
     PREFIX /
@@ -20,13 +23,13 @@ qt_add_resources(appNotes
 qt_add_qml_module(appNotes
     URI Notes
     VERSION 1.0
-    QML_FILES main.qml
+    QML_FILES qml/main.qml
     SOURCES src/TextEditor/texthandler.h src/TextEditor/texthandler.cpp
     SOURCES src/Parsers/JsonParser.hpp src/Parsers/JsonParser.cpp
     SOURCES src/TextEditor/SyntaxHighlighter.h src/TextEditor/SyntaxHighlighter.cpp
     SOURCES src/FileSystem/FileHandler.h src/FileSystem/FileHandler.cpp
-    QML_FILES NoteEditor.qml
-    QML_FILES TopMenuBar.qml
+    QML_FILES qml/NoteEditor.qml
+    QML_FILES qml/TopMenuBar.qml
 
 )
 

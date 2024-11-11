@@ -7,6 +7,7 @@
 #include <QResource>
 #include "JsonParser.hpp"
 
+
 void JsonParser::parseFile(const QString& path)
 {
 
@@ -35,17 +36,17 @@ QStringList JsonParser::parseJsonArray(const QString &path)
         }
         return list;
     }
-    catch (QJsonParseError& e)
-    {
-        qDebug() << e.errorString();
-    }
     catch (std::exception& e)
     {
-        qDebug() << e.what();
+        qWarning() << e.what();
+    }
+    catch (QJsonParseError& e)
+    {
+        qWarning() << e.errorString();
     }
     catch (...)
     {
-        qDebug() << "An error occured";
+        qWarning() << "Unknown exception";
     }
-    return QStringList();
+    return {};
 }
