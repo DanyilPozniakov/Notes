@@ -1,6 +1,7 @@
 
 .idea
 cmake-build-debug
+cmake-build-debug-visual-studio
 build
 qt_dll
 CMakeLists.txt.user

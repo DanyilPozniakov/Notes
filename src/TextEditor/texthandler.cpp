@@ -11,6 +11,9 @@
 #include <QQuickTextDocument>
 #include <iostream>
 
+#include <clang-c/Index.h>
+#include <QFile>
+
 #include "texthandler.h"
 
 //TODO: real-time log for debugging in application
@@ -50,7 +53,6 @@ void TextHandler::setTextDocument(QObject *textEditObject)
     QVariant docVariant = textEditObject->property("textDocument");
     QQuickTextDocument *quickDoc = qvariant_cast<QQuickTextDocument*>(docVariant);
     if (quickDoc) {
-        assert(quickDoc && "TextDocument is null");
         m_textDocument = quickDoc->textDocument();
         connect(m_textDocument, &QTextDocument::contentsChange, this, &TextHandler::onTextChanged);
         //TODO: отдельный метод для установки опций
@@ -65,6 +67,8 @@ void TextHandler::setTextDocument(QObject *textEditObject)
         //SYNTAX HIGHLIGHTER
         m_syntaxHighlighter = new SyntaxHighlighter(m_textDocument);
     }
+    else assert(quickDoc && "TextDocument is null");
+
 }
 
 
@@ -126,6 +130,8 @@ void TextHandler::autoCompleteBrackets(const QChar& bracket)
 
 void TextHandler::autoDeleteBrackets(const QChar &bracket)
 {
+
+
     QString textAfterBracket = m_previousText.mid(m_cursor.position());
     QChar closingBracket = autoCharMap[bracket];
     int stack = 0;
@@ -176,7 +182,7 @@ bool TextHandler::onHandleKeyPress(int key, Qt::KeyboardModifier modifier)
             {
                 if(shuldBreakLine(line))
                 {
-                    //TODO: добавить отстуцпы если есть внешкий скоупrtyj
+
                     QString indentation = generateIndentation();
                     QString indentationMin = generateIndentation().removeLast();
                     m_cursor.movePosition(QTextCursor::Left,QTextCursor::MoveAnchor,1);

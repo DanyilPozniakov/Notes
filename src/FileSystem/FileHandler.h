@@ -7,9 +7,18 @@ class FileHandler : public QObject
 {
     Q_OBJECT
 
+
 public:
-    void openFile(const QString& path);
-    void saveFile(const QString& path, const QObject* file);
+    FileHandler(QObject* parent = nullptr);
+
+    void createFile (const QString& fileName, const QString& path = {});
+    void updateFile(const QString& fileName, const QString& text);
+
+private:
+    QString m_pathToFiles;
+
+
+
 };
 
 #endif // FILEHANDLER_H

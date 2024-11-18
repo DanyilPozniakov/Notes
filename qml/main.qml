@@ -1,31 +1,37 @@
 import QtQuick
 import QtQuick.Controls
-
-
-
-
-
-
-
-
-
-
+import QtQuick.Layouts
 
 
 
 ApplicationWindow {
     id: window
-    width: 1000
-    height: 600
+    width: 1200
+    height: 750
     visible: true
     title: qsTr("Hello World")
     color: "#1e1f22"
     //flags: Qt.FramelessWindowHint
 
-    header: TopMenuBar {
-        id: menuBar
-        height: 25
+
+    header: TopMenuBar{
+        id: topMenuBar
+        height: 35
     }
+
+
+    footer: Rectangle{
+        height: 25
+        color: "#3c3f40"
+        border.width: 1
+        border.color: "#505050"
+        Text{
+            anchors.centerIn: parent
+            text: "Footer"
+            color: "white"
+        }
+    }
+
     NoteEditor {
         id: noteEditor
         anchors.right: parent.right
@@ -34,17 +40,13 @@ ApplicationWindow {
         height: parent.height
     }
 
-    Rectangle{
+    LeftBar {
         id: leftBar
-        color: "#3c3f40"
         anchors.left: parent.left
-        width: 250
+        color: "#3c3f40"
         height: parent.height
-
-
+        width: 350
     }
-
-
 
 
     Dialog {
@@ -55,4 +57,13 @@ ApplicationWindow {
         width: 400
         height: 250
     }
+
+
 }
+
+
+
+
+
+
+

@@ -8,6 +8,9 @@
 #include <QTextCursor>
 #include <QTextOption>
 
+#include "../FileSystem/FileHandler.h"
+
+
 #include "SyntaxHighlighter.h"
 
 using namespace TextEditor;
@@ -16,6 +19,11 @@ using namespace TextEditor;
 class TextHandler : public QObject
 {
     Q_OBJECT
+private:
+    SyntaxHighlighter*  m_syntaxHighlighter;
+
+
+
 
 public:
     QVariantList getCurrentSuggestions() const;
@@ -44,7 +52,6 @@ private:
     std::unique_ptr<QSet<QString>>  m_autoCompleteSet;
     QVariantList                    m_currentSuggestions;
 
-    SyntaxHighlighter*              m_syntaxHighlighter;
 
     bool m_isAutoCompleting = false;
 

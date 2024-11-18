@@ -1,0 +1,2 @@
+add_library(ClangAnalyzer STATIC ClangAnalyzer.cpp)
+target_include_directories(ClangAnalyzer ${CMAKE_CURRENT_SOURCE_DIR})
