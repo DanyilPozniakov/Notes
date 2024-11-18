@@ -25,7 +25,10 @@ static const QMap<QChar,QChar> autoCharMap = {
 };
 
 
+namespace
+{
 
+}
 
 
 TextHandler::TextHandler(QObject *parent) : QObject(parent)
