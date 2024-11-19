@@ -7,6 +7,7 @@
 #include <QTextDocument>
 #include <QTextCursor>
 #include <QTextOption>
+#include <memory>
 
 #include "../FileSystem/FileHandler.h"
 
@@ -20,10 +21,7 @@ class TextHandler : public QObject
 {
     Q_OBJECT
 private:
-    SyntaxHighlighter*  m_syntaxHighlighter;
-
-
-
+    std::unique_ptr<SyntaxHighlighter>  m_syntaxHighlighter;
 
 public:
     QVariantList getCurrentSuggestions() const;
@@ -47,9 +45,9 @@ public slots:
 private:
     QString                         m_previousText;
     QTextCursor                     m_cursor;
-    QTextDocument*                  m_textDocument;
-    QTextOption                     m_textOptions;
+    QTextDocument*  m_textDocument;
     std::unique_ptr<QSet<QString>>  m_autoCompleteSet;
+    QTextOption                     m_textOptions;
     QVariantList                    m_currentSuggestions;
 
 

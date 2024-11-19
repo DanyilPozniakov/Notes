@@ -4,12 +4,12 @@
 
 #include "src/FileSystem/FileHandler.h"
 
-class CoreApplication : public QObject
+class AppCore : public QObject
 {
     Q_OBJECT
 
 public:
-    CoreApplication(QObject *parent = nullptr);
+    AppCore(QObject *parent = nullptr);
 
 public slots:
     void createNewFile(const QString& fileName);
@@ -19,7 +19,5 @@ private:
     FileHandler* fileHandler;
 
 };
-
-
 
 #endif //COREAPPLICATION_H

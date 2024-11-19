@@ -6,10 +6,13 @@
 #include <QString>
 
 namespace {
-struct HighlightingRule {
-  QRegularExpression pattern;
-  QTextCharFormat format;
+
+struct HighlightingRule
+{
+  QRegularExpression  pattern;
+  QTextCharFormat     format;
 };
+
 }
 
 namespace TextEditor {

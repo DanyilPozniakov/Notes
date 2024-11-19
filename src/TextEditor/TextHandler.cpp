@@ -5,7 +5,7 @@
 #include <QQuickTextDocument>
 #include <QTextCursor>
 #include <QTextBlock>
-#include "src/parsers/JsonParser.hpp"
+#include "src/parsers/JsonParser.h"
 #include "src/TextEditor/Regex.hpp"
 
 #include <QQuickTextDocument>
@@ -14,7 +14,7 @@
 #include <clang-c/Index.h>
 #include <QFile>
 
-#include "texthandler.h"
+#include "TextHandler.h"
 
 //TODO: real-time log for debugging in application
 
@@ -23,12 +23,6 @@ static const QMap<QChar,QChar> autoCharMap = {
     {'{','}'},
     {'[',']'}
 };
-
-
-namespace
-{
-
-}
 
 
 TextHandler::TextHandler(QObject *parent) : QObject(parent)
@@ -58,7 +52,7 @@ void TextHandler::setTextDocument(QObject *textEditObject)
     if (quickDoc) {
         m_textDocument = quickDoc->textDocument();
         connect(m_textDocument, &QTextDocument::contentsChange, this, &TextHandler::onTextChanged);
-        //TODO: отдельный метод для установки опций
+        //TODO: create method to set text_options
         m_textOptions =  m_textDocument->defaultTextOption();
         m_textOptions.setTabStopDistance(25);
         m_textDocument->setDefaultTextOption(m_textOptions);
@@ -68,7 +62,7 @@ void TextHandler::setTextDocument(QObject *textEditObject)
         m_cursor.setPosition(0);
 
         //SYNTAX HIGHLIGHTER
-        m_syntaxHighlighter = new SyntaxHighlighter(m_textDocument);
+        m_syntaxHighlighter = std::make_unique<SyntaxHighlighter>(m_textDocument);
     }
     else assert(quickDoc && "TextDocument is null");
 
@@ -79,7 +73,7 @@ void TextHandler::setTextDocument(QObject *textEditObject)
 void TextHandler::onTextChanged(int position, int charsRemoved, int charsAdded)
 {
 
-    ///TODO: RESTRUCTURE THIS FUNCTION
+    ///TODO: RESTRUCT THIS FUNCTION
     if(!m_textDocument) assert(m_textDocument && "TextDocument is null");
     if(m_isAutoCompleting) return;
 
@@ -176,7 +170,7 @@ bool TextHandler::onHandleKeyPress(int key, Qt::KeyboardModifier modifier)
 {
     switch (key)
     {
-
+        qDebug() << "onHandleKeyPress method ->";
         ///RETURN
         case Qt::Key_Return:
         {
@@ -185,7 +179,6 @@ bool TextHandler::onHandleKeyPress(int key, Qt::KeyboardModifier modifier)
             {
                 if(shuldBreakLine(line))
                 {
-
                     QString indentation = generateIndentation();
                     QString indentationMin = generateIndentation().removeLast();
                     m_cursor.movePosition(QTextCursor::Left,QTextCursor::MoveAnchor,1);
@@ -198,6 +191,7 @@ bool TextHandler::onHandleKeyPress(int key, Qt::KeyboardModifier modifier)
                 }
                 else
                 {
+
                     QString indentation = generateIndentation();
                     QString text = "\n" + indentation + "\n";
                     m_cursor.insertText(text);
@@ -221,7 +215,7 @@ bool TextHandler::onHandleKeyPress(int key, Qt::KeyboardModifier modifier)
         case Qt::Key_Backspace:
         {
             //TODO: implement backspace
-            //TODO: добавить проверку на пустую строку
+
             if(isLineBeforeBackspaceEmpty())
             {
                 deleteAllBeforeFirstChar();

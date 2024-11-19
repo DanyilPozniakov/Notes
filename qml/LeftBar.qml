@@ -2,27 +2,33 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-
-
-Rectangle{
+Rectangle {
     id: leftBar
+    width: 300
+    height: 600
+    color: "#2c2c2c"
+
     property bool addingCategory: false
+
+    onAddingCategoryChanged: {
+        newCategoryName.text = ""
+    }
 
     ColumnLayout {
         anchors.fill: parent
 
+        // HEADER
         RowLayout {
             Layout.fillWidth: true
             height: 40
-            //color: "transparent"
             spacing: 10
+
             Text {
                 id: tNotes
-                anchors.left: parent
-                text: "HOME"
+                text: "NOTES"
                 font.family: "JetBrains Mono"
                 font.pixelSize: 40
-                color: "#93fff2"
+                color: "#dddddd"
             }
 
             Button {
@@ -33,13 +39,16 @@ Rectangle{
                     addingCategory = !addingCategory
                 }
             }
-
         }
+
+        // CATEGORY INPUT
         Rectangle {
             id: writeNewCategory
             Layout.fillWidth: true
-            height: addingCategory ? 40 : 0
-            color: "#a12323"
+            height: addingCategory ? 35 : 0
+            z: 1
+            color: "#a8a8a8"
+            opacity: 1
             border.width: 1
             radius: 4
 
@@ -51,20 +60,20 @@ Rectangle{
                 id: newCategoryName
                 anchors.fill: parent
                 focus: addingCategory
-                color: "#30a557"
+
                 font.pixelSize: 24
+                maximumLength: 20
                 onAccepted: {
-                    addingCategory = false
-                    categoryView.model.append({name: newCategoryName.text})
+                    categoryView.model.append({ name: newCategoryName.text })
                     newCategoryName.text = ""
+                    addingCategory = false
                 }
             }
-            
-
         }
-        //listNOde
+
+        // NOTES TREE
         Rectangle {
-            id:noteList
+            id: noteList
             Layout.fillWidth: true
             Layout.fillHeight: true
             color: "transparent"
@@ -76,10 +85,10 @@ Rectangle{
                 id: categoryView
                 anchors.fill: parent
                 model: ListModel {
-                    ListElement { name: "Category1" }
-                    ListElement { name: "Category2" }
-                    ListElement { name: "Category3" }
-                    ListElement { name: "Category4" }
+                    ListElement { name: "STL + " }
+                    ListElement { name: "Algorithms +" }
+
+                    //TODO: realize tree structure
                 }
 
                 delegate: Item {
@@ -89,7 +98,7 @@ Rectangle{
                         anchors.fill: parent
                         color: "transparent"
                         Text {
-                            anchors.left: parent
+                            anchors.left: parent.left
                             text: name
                             font.pixelSize: 17
                             color: "white"
@@ -97,6 +106,18 @@ Rectangle{
                     }
                 }
             }
+        }
+    }
+
+
+    //
+    MouseArea {
+        id: dropWriteCategory
+        anchors.fill: leftBar
+        z: 2
+        visible: addingCategory
+        onClicked: {
+            addingCategory = false
         }
     }
 }

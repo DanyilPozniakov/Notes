@@ -1,16 +1,17 @@
 #include <QTextCharFormat>
 
-#include "../Parsers/JsonParser.hpp"
+#include "../Parsers/JsonParser.h"
 #include "SyntaxHighlighter.h"
 
 TextEditor::SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
     : QSyntaxHighlighter(parent)
 {
+    assert(parent && "TextDocument is null in syntaxHighlighter constructor");
     QColor color = "#cc7a46";
     keywordFormat.setForeground(color);
     keywordFormat.setFontWeight(QFont::Bold);
 
-    QStringList patterns = JsonParser::parseJsonArray(":/keywords.json");
+    QStringList patterns = JsonParser::parseKeywords();
     for (const auto& pattern : patterns)
     {
         QString paternn = "\\b" + pattern + "\\b";

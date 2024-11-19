@@ -10,7 +10,7 @@ MenuBar {
             text: "New"
             onTriggered:{
                 application.createNewFile("NewFile");
-                newFileWindow.visible = true;
+                //TODO: qDialog
             }
         }
         Action { text: "Open" }
@@ -36,10 +36,7 @@ MenuBar {
         title: "About"
     }
 
-    NewFileWindow {
-        id: newFileWindow
-    }
-
+    // WINDOWS/DIOLOG
     SettingsWindow {
         id: settingsWindow
     }

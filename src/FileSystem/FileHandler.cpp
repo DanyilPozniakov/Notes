@@ -16,8 +16,9 @@ FileHandler::FileHandler(QObject* parent)
 
 void FileHandler::createFile(const QString& fileName, const QString& path)
 {
+    //TODO: add .h .cpp .qml logic
     QDir dir;
-    QString filePath = m_pathToFiles + fileName + ".txt"; //TODO: add .h .cpp .qml logic
+    QString filePath = m_pathToFiles + fileName + ".txt";
     QFile file(filePath);
     if(file.open(QIODevice::WriteOnly))
     {

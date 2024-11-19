@@ -6,26 +6,17 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH "C:/Qt/6.8.0/msvc2022_64")
 
-
-
-
-
 find_package(Qt6 6.8 COMPONENTS Core Quick qml QuickControls2 Gui REQUIRED)
 
 set(LLVM_DIR "C:/Program Files/LLVM")
 include_directories("${LLVM_DIR}/include")
 link_directories("${LLVM_DIR}/lib")
 
-
-
 qt_add_executable(appNotes
     main.cpp
 )
 
-
-
 qt_add_resources(appNotes jsonResurces.qrc )
-
 
 qt_add_resources(appNotes
     PREFIX /
@@ -38,12 +29,12 @@ qt_add_qml_module(appNotes
         qml/main.qml
         qml/NoteEditor.qml
         qml/TopMenuBar.qml
-        qml/NewFileWindow.qml
+
         qml/SettingsWindow.qml
     SOURCES
-        src/CoreApp/CoreApplication.cpp src/CoreApp/CoreApplication.h
+        src/CoreApp/AppCore.cpp src/CoreApp/AppCore.h
         src/TextEditor/texthandler.h src/TextEditor/texthandler.cpp
-        src/Parsers/JsonParser.hpp src/Parsers/JsonParser.cpp
+        src/Parsers/JsonParser.h src/Parsers/JsonParser.cpp
         src/TextEditor/SyntaxHighlighter.h src/TextEditor/SyntaxHighlighter.cpp
         src/FileSystem/FileHandler.h src/FileSystem/FileHandler.cpp
         QML_FILES qml/LeftBar.qml
@@ -59,7 +50,7 @@ set_target_properties(appNotes PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+    WIN32_EXECUTABLE FALSE
 )
 
 
@@ -74,7 +65,6 @@ target_link_libraries(appNotes
   )
 
 if (WIN32)
-    set_target_properties(appNotes PROPERTIES WIN32_EXECUTABLE OFF)
 
     find_program(WINDEPLOYQT_EXECUTABLE windeployqt
             PATHS ${Qt6_DIR}/6.8.0/msvc2022_64/bin

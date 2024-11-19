@@ -9,16 +9,14 @@ ApplicationWindow {
     width: 1200
     height: 750
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("Notes")
     color: "#1e1f22"
-    //flags: Qt.FramelessWindowHint
 
 
     header: TopMenuBar{
         id: topMenuBar
         height: 35
     }
-
 
     footer: Rectangle{
         height: 25
@@ -47,17 +45,6 @@ ApplicationWindow {
         height: parent.height
         width: 350
     }
-
-
-    Dialog {
-        id:settingDialog
-        title: "Settings"
-        modal: true
-
-        width: 400
-        height: 250
-    }
-
 
 }
 

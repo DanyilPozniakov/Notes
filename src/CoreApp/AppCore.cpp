@@ -2,15 +2,15 @@
 // Created by pozni on 12.11.2024.
 //
 
-#include "CoreApplication.h"
+#include "AppCore.h"
 
-CoreApplication::CoreApplication(QObject* parent)
+AppCore::AppCore(QObject* parent)
 {
     fileHandler = new FileHandler();
     assert(fileHandler && "In CoreApplication constructor fileHandler is null");
 }
 
-void CoreApplication::createNewFile(const QString& fileName)
+void AppCore::createNewFile(const QString& fileName)
 {
     fileHandler->createFile(fileName);
 }

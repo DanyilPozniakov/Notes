@@ -1,24 +1,17 @@
-
 #include <QDebug>
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QResource>
-#include "JsonParser.hpp"
+#include "JsonParser.h"
 
 
-void JsonParser::parseFile(const QString& path)
-{
-
-}
-
-
-QStringList JsonParser::parseJsonArray(const QString &path)
+QStringList JsonParser::parseKeywords()
 {
     try
     {
-        QFile file(path);
+        QFile file(":/keywords.json");
         if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             qDebug() << "Could not open file";
@@ -26,7 +19,14 @@ QStringList JsonParser::parseJsonArray(const QString &path)
         }
 
         QByteArray data = file.readAll();
-        QJsonDocument doc = QJsonDocument::fromJson(data);
+        QJsonParseError parseError;
+        QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
+        if(parseError.error != QJsonParseError::NoError)
+        {
+            qWarning() << parseError.errorString();
+            return {};
+        }
+
         QJsonObject obj = doc.object();
         QJsonArray array = obj["keywords"].toArray();
         QStringList list;
@@ -36,17 +36,20 @@ QStringList JsonParser::parseJsonArray(const QString &path)
         }
         return list;
     }
-    catch (std::exception& e)
-    {
-        qWarning() << e.what();
-    }
+
     catch (QJsonParseError& e)
     {
         qWarning() << e.errorString();
     }
+    catch (std::exception& e)
+    {
+        qWarning() << e.what();
+    }
     catch (...)
     {
-        qWarning() << "Unknown exception";
+        qWarning() << "Unknown exception in JsonParser::parseKeywords";
     }
     return {};
 }
+
+
