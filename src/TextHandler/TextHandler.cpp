@@ -1,20 +1,20 @@
 #include <QMap>
 #include <QDebug>
-#include <QStack>
 #include <QRegularExpression>
 #include <QQuickTextDocument>
 #include <QTextCursor>
 #include <QTextBlock>
-#include "src/parsers/JsonParser.h"
-#include "src/TextEditor/Regex.hpp"
-
+#include <QFile>
 #include <QQuickTextDocument>
+
 #include <iostream>
 
-#include <clang-c/Index.h>
-#include <QFile>
-
+#include "../Parsers/JsonParser.h"
+#include "Regex.h"
 #include "TextHandler.h"
+
+//#include <clang-c/Index.h>
+
 
 //TODO: real-time log for debugging in application
 
@@ -27,7 +27,7 @@ static const QMap<QChar,QChar> autoCharMap = {
 
 TextHandler::TextHandler(QObject *parent) : QObject(parent)
 {
-    m_autoCompleteSet = createAutoCompleteSet();
+    //m_autoCompleteSet = createAutoCompleteSet();
 }
 
 std::unique_ptr<QSet<QString>> TextHandler::createAutoCompleteSet()
@@ -75,10 +75,19 @@ void TextHandler::onTextChanged(int position, int charsRemoved, int charsAdded)
 
     ///TODO: RESTRUCT THIS FUNCTION
     if(!m_textDocument) assert(m_textDocument && "TextDocument is null");
-    if(m_isAutoCompleting) return;
+
 
     //autocomplete brackets
-    QString text = m_textDocument->toPlainText().mid(position, charsAdded);
+    QString text;
+    if(charsAdded > 0)
+    {
+        auto pos = m_cursor.position();
+        m_cursor.setPosition(position);
+        m_cursor.setPosition(position + charsAdded, QTextCursor::KeepAnchor);
+        text = m_cursor.selectedText();
+        m_cursor.setPosition(pos);
+
+    }
     QString deletedText = m_previousText.mid(position,1);
     if(!text.isEmpty() && autoCharMap.contains(text[0]))
     {
@@ -97,13 +106,11 @@ void TextHandler::onTextChanged(int position, int charsRemoved, int charsAdded)
 
 
 
-QString TextHandler::getCurrentLineText()
+QString TextHandler::getCurrentLineText() const
 {
     QTextBlock  block = m_cursor.block();
     return block.text();
 }
-
-
 
 std::optional<QChar> TextHandler::isBracket(const QChar &bracket)
 {
@@ -116,19 +123,15 @@ std::optional<QChar> TextHandler::isBracket(const QChar &bracket)
 
 void TextHandler::autoCompleteBrackets(const QChar& bracket)
 {
-    m_isAutoCompleting = true;
     QChar closingBracket = autoCharMap[bracket];
     m_cursor.insertText(closingBracket);
     m_cursor.movePosition(QTextCursor::Left,QTextCursor::MoveAnchor,1);
     emit cursorUpdated(m_cursor.position());
-    m_isAutoCompleting = false;
 
 }
 
 void TextHandler::autoDeleteBrackets(const QChar &bracket)
 {
-
-
     QString textAfterBracket = m_previousText.mid(m_cursor.position());
     QChar closingBracket = autoCharMap[bracket];
     int stack = 0;
@@ -170,14 +173,13 @@ bool TextHandler::onHandleKeyPress(int key, Qt::KeyboardModifier modifier)
 {
     switch (key)
     {
-        qDebug() << "onHandleKeyPress method ->";
         ///RETURN
         case Qt::Key_Return:
         {
             QString line = getCurrentLineText();
             if(line.contains("{}"))
             {
-                if(shuldBreakLine(line))
+                if(isShuldBreakLine(line))
                 {
                     QString indentation = generateIndentation();
                     QString indentationMin = generateIndentation().removeLast();
@@ -225,7 +227,7 @@ bool TextHandler::onHandleKeyPress(int key, Qt::KeyboardModifier modifier)
     }
     return false;
 }
-bool TextHandler::shuldBreakLine(const QString& line)
+bool TextHandler::isShuldBreakLine(const QString& line)
 {
     if(line.isEmpty()) return false;
     QRegularExpression classRegex(Regex::CLASS_DECLARATION);
@@ -310,10 +312,21 @@ void TextHandler::deleteAllBeforeFirstChar()
         emit cursorUpdated(m_cursor.position());
     }
 }
+
+void TextHandler::highlightingMatchingBrackets()
+{
+}
+
+void TextHandler::findMatchingBracket()
+{
+
+}
+
 bool TextHandler::isLineEmpty(const QString &line)
 {
     return line.trimmed().isEmpty();
 }
+
 
 
 

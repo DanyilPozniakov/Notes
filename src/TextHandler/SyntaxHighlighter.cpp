@@ -36,3 +36,5 @@ void TextEditor::SyntaxHighlighter::highlightBlock(const QString &text)
     }
     qDebug() << "highlightBlock";
 }
+
+

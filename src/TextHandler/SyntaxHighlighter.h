@@ -23,6 +23,8 @@ public:
   explicit SyntaxHighlighter(QTextDocument *parent = nullptr);
   void highlightBlock(const QString &text) override;
 
+
+
 private:
   QTextCharFormat keywordFormat;
   QVector<HighlightingRule> rules;

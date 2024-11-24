@@ -8,19 +8,19 @@ set(CMAKE_PREFIX_PATH "C:/Qt/6.8.0/msvc2022_64")
 
 find_package(Qt6 6.8 COMPONENTS Core Quick qml QuickControls2 Gui REQUIRED)
 
-set(LLVM_DIR "C:/Program Files/LLVM")
-include_directories("${LLVM_DIR}/include")
-link_directories("${LLVM_DIR}/lib")
+#set(LLVM_DIR "C:/Program Files/LLVM")
+#include_directories("${LLVM_DIR}/include")
+#link_directories("${LLVM_DIR}/lib")
 
-qt_add_executable(appNotes
-    main.cpp
-)
+add_subdirectory(src/TextHandler TextHandler)
 
-qt_add_resources(appNotes jsonResurces.qrc )
+qt_add_executable(appNotes main.cpp)
+
 
 qt_add_resources(appNotes
     PREFIX /
     FILES keywords.json
+    jsonResurces.qrc
 )
 qt_add_qml_module(appNotes
     URI Notes
@@ -29,17 +29,15 @@ qt_add_qml_module(appNotes
         qml/main.qml
         qml/NoteEditor.qml
         qml/TopMenuBar.qml
-
         qml/SettingsWindow.qml
+        qml/LeftBar.qml
     SOURCES
         src/CoreApp/AppCore.cpp src/CoreApp/AppCore.h
-        src/TextEditor/texthandler.h src/TextEditor/texthandler.cpp
         src/Parsers/JsonParser.h src/Parsers/JsonParser.cpp
-        src/TextEditor/SyntaxHighlighter.h src/TextEditor/SyntaxHighlighter.cpp
         src/FileSystem/FileHandler.h src/FileSystem/FileHandler.cpp
-        QML_FILES qml/LeftBar.qml
-
-
+        src/CoreApp/Models/CategoryModel.cpp src/CoreApp/Models/CategoryModel.h
+        src/CoreApp/Models/CategoryItem.cpp src/CoreApp/Models/CategoryItem.h
+        src/CoreApp/Models/File.cpp src/CoreApp/Models/File.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -61,7 +59,8 @@ target_link_libraries(appNotes
             Qt6::Core
             Qt6::Gui
             Qt6::QuickControls2
-            libclang
+            TextHandler
+#            libclang
   )
 
 if (WIN32)
@@ -72,7 +71,7 @@ if (WIN32)
     )
 
     if (WINDEPLOYQT_EXECUTABLE)
-        message(STATUS "windeployqt найден: ${WINDEPLOYQT_EXECUTABLE}")
+        message(STATUS "windeployqt find: ${WINDEPLOYQT_EXECUTABLE}")
         if (CMAKE_BUILD_TYPE STREQUAL "Debug")
             set(WINDEPLOYQT_FLAGS "--debug")
         else()
@@ -81,10 +80,10 @@ if (WIN32)
 
         add_custom_command(TARGET appNotes POST_BUILD
                 COMMAND ${WINDEPLOYQT_EXECUTABLE} ${WINDEPLOYQT_FLAGS}  "$<TARGET_FILE:appNotes>"
-                COMMENT "Выполнение windeployqt для развертывания зависимостей Qt"
+                COMMENT "windeployqt..."
         )
     else()
-        message(FATAL_ERROR "windeployqt не найден. Пожалуйста, убедитесь, что Qt установлен и windeployqt доступен в PATH.")
+        message(FATAL_ERROR "windeployqt is not found")
     endif()
 
 endif()

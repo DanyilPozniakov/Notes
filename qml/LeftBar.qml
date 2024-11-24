@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import CategoryModel 1.0
 
 Rectangle {
     id: leftBar
@@ -41,7 +42,7 @@ Rectangle {
             }
         }
 
-        // CATEGORY INPUT
+        // CATEGORY ADD INPUT
         Rectangle {
             id: writeNewCategory
             Layout.fillWidth: true
@@ -64,8 +65,7 @@ Rectangle {
                 font.pixelSize: 24
                 maximumLength: 20
                 onAccepted: {
-                    categoryView.model.append({ name: newCategoryName.text })
-                    newCategoryName.text = ""
+                    categoryModel.addCategory(newCategoryName.text)
                     addingCategory = false
                 }
             }
@@ -81,27 +81,94 @@ Rectangle {
             border.color: "#dfdfdf"
             radius: 5
 
+            CategoryModel {
+                id: categoryModel
+            }
+
             ListView {
                 id: categoryView
                 anchors.fill: parent
-                model: ListModel {
-                    ListElement { name: "STL + " }
-                    ListElement { name: "Algorithms +" }
-
-                    //TODO: realize tree structure
-                }
+                model: categoryModel
 
                 delegate: Item {
-                    width: categoryView.width
-                    height: 35
-                    Rectangle {
+                    width: parent.width
+                    height: files.length * 35 + 35
+
+                    property int categoryIndex: index
+
+                    Column {
                         anchors.fill: parent
-                        color: "transparent"
-                        Text {
-                            anchors.left: parent.left
-                            text: name
-                            font.pixelSize: 17
-                            color: "white"
+                        //CATEGORY ->
+                        Row{
+                            width: parent.width
+                            height: 35
+
+                            Text{
+                                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                                Layout.leftMargin: 20
+                                anchors.leftMargin: 10
+                                text: categoryName
+                                font.pixelSize: 17
+                                color: "white"
+                            }
+
+                            Item{
+                                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                                Layout.rightMargin: 20
+                                height: parent.height
+                                width: height
+                                Text{
+                                    anchors.centerIn: parent
+                                    text:'+'
+                                    font.pixelSize: 17
+                                    color: "#c1c1c1"
+                                }
+                                MouseArea{
+                                    anchors.fill: parent
+                                    onClicked:{
+                                        categoryModel.addNoteToCategory(index, "New Note");
+                                    }
+                                }
+                            }
+                        }
+                        //REPEATER: CATEGORY -> NOTES
+                        Repeater {
+                            model: files
+                            delegate: Rectangle {
+                                width: parent.width
+                                height: 35
+                                color: "transparent"
+                                border.width: 1
+                                border.color: "#dfdfdf"
+                                //NOTE ->
+                                Row{
+                                    width: parent.width
+                                    height: 35
+                                    Text {
+                                        text: modelData.name
+                                        Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                                        Layout.leftMargin: 20
+                                        font.pixelSize: 15
+                                        color: "white"
+                                    }
+                                    Button{
+                                        text:"delete"
+                                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                                        Layout.rightMargin: 20
+                                        onClicked:{
+                                            console.log(categoryIndex,index)
+                                            categoryModel.removeNoteFromCategory(categoryIndex,index)
+                                        }
+                                    }
+
+                                    MouseArea{
+                                        onDoubleClicked:{
+                                            //TODO: current file logic
+                                        }
+                                    }
+                                }
+
+                            }
                         }
                     }
                 }
