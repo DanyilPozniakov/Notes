@@ -11,6 +11,7 @@ Item {
             radius: 4
             color: "#1e1f22"
 
+            property bool mouseSelectionMode: false
 
             TextEdit{
                 id: textEdit
@@ -21,6 +22,10 @@ Item {
                 font.pixelSize: 15
                 color: "#dedede"
                 textMargin: 10
+                z:1
+
+
+                selectByMouse: true;
 
                 Keys.onPressed: (event) => {
                     if(event.key === Qt.Key_Return || event.key === Qt.Key_Backspace){

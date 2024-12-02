@@ -8,9 +8,9 @@ set(CMAKE_PREFIX_PATH "C:/Qt/6.8.0/msvc2022_64")
 
 find_package(Qt6 6.8 COMPONENTS Core Quick qml QuickControls2 Gui REQUIRED)
 
-#set(LLVM_DIR "C:/Program Files/LLVM")
-#include_directories("${LLVM_DIR}/include")
-#link_directories("${LLVM_DIR}/lib")
+set(LLVM_DIR "C:/Program Files/LLVM")
+include_directories("${LLVM_DIR}/include")
+link_directories("${LLVM_DIR}/lib")
 
 add_subdirectory(src/TextHandler TextHandler)
 
@@ -60,7 +60,7 @@ target_link_libraries(appNotes
             Qt6::Gui
             Qt6::QuickControls2
             TextHandler
-#            libclang
+            libclang
   )
 
 if (WIN32)

@@ -1,4 +1,5 @@
 #include <QTextCharFormat>
+#include <Regex.h>
 
 #include "../Parsers/JsonParser.h"
 #include "SyntaxHighlighter.h"
@@ -11,6 +12,20 @@ TextEditor::SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
     keywordFormat.setForeground(color);
     keywordFormat.setFontWeight(QFont::Bold);
 
+    //Comment format
+    {
+        QColor comment_color = "#6a9955";
+        QTextCharFormat commentFormat;
+        commentFormat.setForeground(comment_color);
+        commentFormat.setFontWeight(QFont::Bold);
+        HighlightingRule rule;
+        rule.pattern = QRegularExpression(Regex::COMMENT);
+        rule.format = commentFormat;
+        rules.append(rule);
+    }
+
+
+    //Standard types
     QStringList patterns = JsonParser::parseKeywords();
     for (const auto& pattern : patterns)
     {
@@ -21,6 +36,8 @@ TextEditor::SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
         rules.append(rule);
     }
     qDebug() << "SyntaxHighlighter created";
+
+
 }
 
 void TextEditor::SyntaxHighlighter::highlightBlock(const QString &text)

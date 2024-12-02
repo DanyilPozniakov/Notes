@@ -40,6 +40,16 @@ Rectangle {
                     addingCategory = !addingCategory
                 }
             }
+
+            Button{
+                text: "Format Code"
+                width: 100
+                height: 40
+                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                onClicked:{
+                    textHandler.formatCode();
+                }
+            }
         }
 
         // CATEGORY ADD INPUT

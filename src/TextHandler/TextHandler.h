@@ -17,17 +17,20 @@ using namespace TextEditor;
 class TextHandler : public QObject
 {
     Q_OBJECT
+
 public:
     QVariantList getCurrentSuggestions() const;
 
-    TextHandler(QObject *parent = nullptr);
+    TextHandler(QObject* parent = nullptr);
 
     Q_PROPERTY(QVariantList currentSuggestions READ getCurrentSuggestions NOTIFY currentSuggestionsChanged);
     Q_PROPERTY(int m_cursor READ cursorPosition WRITE setCursorPosition NOTIFY cursorUpdated);
-    void    setTextDocument(QObject* textEditObject);
+    void setTextDocument(QObject* textEditObject);
 
-    void    setCursorPosition(int position);
-    int     cursorPosition() const;
+    void setCursorPosition(int position);
+    int cursorPosition() const;
+
+    Q_INVOKABLE void formatCode();
 
 signals:
     void currentSuggestionsChanged();
@@ -40,16 +43,16 @@ public slots:
 private:
     //std::unique_ptr<QSet<QString>>  m_autoCompleteSet;
 
-    QString         m_previousText;
-    QTextCursor     m_cursor;
-    QTextOption     m_textOptions;
-    QVariantList    m_currentSuggestions;
+    QString m_previousText;
+    QTextCursor m_cursor;
+    QTextOption m_textOptions;
+    QVariantList m_currentSuggestions;
 
-    std::unique_ptr<SyntaxHighlighter>  m_syntaxHighlighter;
-    QTextDocument*                      m_textDocument;
+    std::unique_ptr<SyntaxHighlighter> m_syntaxHighlighter;
+    QTextDocument* m_textDocument;
 
     //PRIVATE METHODS
-    std::unique_ptr<QSet<QString>>  createAutoCompleteSet();
+    std::unique_ptr<QSet<QString>> createAutoCompleteSet();
 
     QString getCurrentLineText() const;
     QString generateIndentation();
@@ -64,7 +67,6 @@ private:
     void highlightingMatchingBrackets();
     void findMatchingBracket();
     std::optional<QChar> isBracket(const QChar& bracket);
-
 };
 
 #endif // TEXTHANDLER_H
